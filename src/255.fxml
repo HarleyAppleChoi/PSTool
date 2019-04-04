@@ -13,13 +13,13 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1200.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UIcontroller1">
    <children>
       <ImageView fx:id="imageView" fitHeight="455.0" fitWidth="634.0" layoutX="448.0" layoutY="244.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="invertB" layoutX="260.0" layoutY="50.0" mnemonicParsing="false" onAction="#invertA" text="Invert" />
+      <Button fx:id="invertB" layoutX="87.0" layoutY="14.0" mnemonicParsing="false" onAction="#invertA" text="Invert" />
       <Button fx:id="gammaB" layoutX="258.0" layoutY="86.0" mnemonicParsing="false" onAction="#gammaA" text="Gamma Correction" />
       <Button fx:id="ContrastB" layoutX="256.0" layoutY="125.0" mnemonicParsing="false" onAction="#ConstrastA" text="Contrast Stretching" />
       <Button fx:id="histogramB" layoutX="46.0" layoutY="213.0" mnemonicParsing="false" onAction="#histogramA" text="Histogram" />
       <TextField fx:id="gammaText" layoutX="407.0" layoutY="86.0" onAction="#gammaTextF" promptText="Imput index here then press" />
       <Canvas fx:id="contrastLine" height="255.0" layoutX="600.0" layoutY="7.0" width="255.0" />
-      <Button fx:id="resetB" layoutX="258.0" layoutY="14.0" mnemonicParsing="false" onAction="#resetA" text="Reset" />
+      <Button fx:id="resetB" layoutX="30.0" layoutY="14.0" mnemonicParsing="false" onAction="#resetA" text="Reset" />
       <Label fx:id="cor1" layoutX="543.0" layoutY="140.0" text="cor1" />
       <Label fx:id="cor2" layoutX="486.0" layoutY="170.0" text="cor2" />
       <BarChart fx:id="redHistogram" barGap="0.0" layoutX="30.0" layoutY="253.0" prefHeight="218.0" prefWidth="273.0">
@@ -61,9 +61,9 @@
       <Label layoutX="392.0" layoutY="140.0" text="Cor1(Yellow)" />
       <Label layoutX="392.0" layoutY="170.0" text="Cor2(Pink)" />
       <Button fx:id="EqualB" layoutX="147.0" layoutY="213.0" mnemonicParsing="false" onAction="#EqualiA" text="Equalization" />
-      <Button fx:id="greyB" layoutX="325.0" layoutY="14.0" mnemonicParsing="false" onAction="#greyA" text="Grey" />
+      <Button fx:id="greyB" layoutX="143.0" layoutY="14.0" mnemonicParsing="false" onAction="#greyA" text="Grey" />
       <Button fx:id="crossB" layoutX="251.0" layoutY="213.0" mnemonicParsing="false" onAction="#crossA" text="Cross-correlation" />
-      <Button fx:id="theresholdB" layoutX="30.0" layoutY="36.0" mnemonicParsing="false" onAction="#theresholdA" text="thereshold" />
+      <Button fx:id="theresholdB" layoutX="30.0" layoutY="50.0" mnemonicParsing="false" onAction="#theresholdA" text="thereshold" />
       <Button fx:id="lowPassB" layoutX="385.0" layoutY="213.0" mnemonicParsing="false" onAction="#lowPassA" text="Low Pass  (1) 5x5" />
       <Button fx:id="prewittB" layoutX="30.0" layoutY="111.0" mnemonicParsing="false" onAction="#prewittA" text="Prewitt" />
       <Button fx:id="zeroCrossingB" layoutX="95.0" layoutY="112.0" mnemonicParsing="false" onAction="#zeroCrossingA" text="Zero Crossing" />
@@ -73,5 +73,8 @@
       <Button fx:id="orderedB" layoutX="89.0" layoutY="179.0" mnemonicParsing="false" onAction="#orderedA" text="Pattern Dither" />
       <Button fx:id="realOrderedB" layoutX="200.0" layoutY="179.0" mnemonicParsing="false" onAction="#readlOrderedA" text="ordered Dither" />
       <Button fx:id="nonLinearB" layoutX="527.0" layoutY="213.0" mnemonicParsing="false" onAction="#nonLinearA" text="Non Linear" />
+      <TextField fx:id="nearestNeighbourHeight" layoutX="444.0" layoutY="14.0" promptText="Height" />
+      <TextField fx:id="nearestNeighbourWidth" layoutX="444.0" layoutY="50.0" promptText="Width" />
+      <Button fx:id="nearestNeighbourB" layoutX="303.0" layoutY="14.0" mnemonicParsing="false" onAction="#nearestNeighbourA" text="Nearest Neighbor" />
    </children>
 </AnchorPane>

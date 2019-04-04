@@ -67,6 +67,9 @@ public class UIcontroller1 {
 
 	@FXML
 	private Button invertB;
+	
+	@FXML
+	private Button nearestNeighbourB;
 
 	@FXML
 	private Button gammaB;
@@ -82,6 +85,12 @@ public class UIcontroller1 {
 
 	@FXML
 	private TextField gammaText;
+	
+	@FXML
+	private TextField nearestNeighbourWidth;
+	
+	@FXML
+	private TextField nearestNeighbourHeight;
 
 	@FXML
 	private Canvas contrastLine;
@@ -182,6 +191,14 @@ public class UIcontroller1 {
 	@FXML
 	void nonLinearA(ActionEvent event) {
 		image = nonLinearFilter(imageView.getImage());
+		// Update the GUI so the new image is displayed
+		imageView.setImage(image);
+	}
+	
+	@FXML
+	void nearestNeighbourA(ActionEvent event) {
+		image = nearestNeighbor(imageView.getImage(),Integer.parseInt(nearestNeighbourHeight.getText())
+				,Integer.parseInt(nearestNeighbourWidth.getText()));
 		// Update the GUI so the new image is displayed
 		imageView.setImage(image);
 	}
@@ -433,12 +450,12 @@ public class UIcontroller1 {
 		return inverted_image;
 	}
 	
-	private Image NearestNeighbor(Image image,int nh,int nw) {
+	private Image nearestNeighbor(Image image,int nh,int nw) {
 		// Find the width and height of the image to be process
 		int width = (int) image.getWidth();
 		int height = (int) image.getHeight();
 		// Create a new image of that width and height
-		WritableImage inverted_image = new WritableImage(width, height);
+		WritableImage inverted_image = new WritableImage(nw, nh);
 		// Get an interface to write to that image memory
 		PixelWriter inverted_image_writer = inverted_image.getPixelWriter();
 		// Get an interface to read from the original image passed as the parameter to
@@ -465,10 +482,10 @@ public class UIcontroller1 {
 				
 				
 				// For each pixel, get the colour
-				Color color = image_reader.getColor(x, y);
+				//Color color = image_reader.getColor(x, y);
 				// Do something (in this case invert) - the getColor function returns colours as
 				// 0..1 doubles (we could multiply by 255 if we want 0-255 colours)
-				color = imageA[nowY][nowX];
+				Color color = imageA[nowY][nowX];
 				// Note: for gamma correction you may not need the divide by 255 since getColor
 				// already returns 0-1, nor may you need multiply by 255 since the Color.color
 				// function consumes 0-1 doubles.
@@ -1755,10 +1772,8 @@ public class UIcontroller1 {
 	@FXML
 	private void save() {
 
-		//wim = new WritableImage((int) image.getWidth(), (int) image.getHeight());
 		wim = (WritableImage) image;
 		// store pic from drawing sub program.
-		imageView.snapshot(null, wim);
 		String filePath = LocalDateTime.now() + ".png";
 		System.out.println(filePath);
 		File file = new File(filePath);
