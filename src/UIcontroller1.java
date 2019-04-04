@@ -67,7 +67,7 @@ public class UIcontroller1 {
 
 	@FXML
 	private Button invertB;
-	
+
 	@FXML
 	private Button nearestNeighbourB;
 
@@ -85,10 +85,10 @@ public class UIcontroller1 {
 
 	@FXML
 	private TextField gammaText;
-	
+
 	@FXML
 	private TextField nearestNeighbourWidth;
-	
+
 	@FXML
 	private TextField nearestNeighbourHeight;
 
@@ -170,7 +170,7 @@ public class UIcontroller1 {
 
 	@FXML
 	private Button realOrderedB;
-	
+
 	@FXML
 	private Button nonLinearB;
 
@@ -187,22 +187,21 @@ public class UIcontroller1 {
 	// contrast starching look up table
 	public double[] contrast = new double[256];
 
-	
 	@FXML
 	void nonLinearA(ActionEvent event) {
 		image = nonLinearFilter(imageView.getImage());
 		// Update the GUI so the new image is displayed
 		imageView.setImage(image);
 	}
-	
+
 	@FXML
 	void nearestNeighbourA(ActionEvent event) {
-		image = nearestNeighbor(imageView.getImage(),Integer.parseInt(nearestNeighbourHeight.getText())
-				,Integer.parseInt(nearestNeighbourWidth.getText()));
+		image = nearestNeighbor(imageView.getImage(), Integer.parseInt(nearestNeighbourHeight.getText()),
+				Integer.parseInt(nearestNeighbourWidth.getText()));
 		// Update the GUI so the new image is displayed
 		imageView.setImage(image);
 	}
-	
+
 	@FXML
 	void prewittA(ActionEvent event) {
 		image = prewitt(imageView.getImage());
@@ -449,8 +448,8 @@ public class UIcontroller1 {
 		}
 		return inverted_image;
 	}
-	
-	private Image nearestNeighbor(Image image,int nh,int nw) {
+
+	private Image bilinear(Image image, int nh, int nw) {
 		// Find the width and height of the image to be process
 		int width = (int) image.getWidth();
 		int height = (int) image.getHeight();
@@ -461,28 +460,103 @@ public class UIcontroller1 {
 		// Get an interface to read from the original image passed as the parameter to
 		// the function
 		PixelReader image_reader = image.getPixelReader();
-		
+
 		Color[][] imageA = new Color[height][width];
 
-			// Iterate over all pixels
-			for (int y = 0; y < height; y++) {
-				for (int x = 0; x < width; x++) {
-					imageA[y][x] = image_reader.getColor(x, y);
-				}
+		// Iterate over all pixels
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				imageA[y][x] = image_reader.getColor(x, y);
 			}
-		
-		
+		}
+
+		int ratioWidth = (int) nw / (int) width;
+		int ratioHeight = (int) nh / (int) height;
+
 		// Iterate over all pixels
 		for (int y = 0; y < nh; y++) {
 			for (int x = 0; x < nw; x++) {
-				
-				int nowY = (int) (y* ((float)height/(float)nh));
-				int nowX = (int) (x* ((float)width/(float)nw));
-				
-				
-				
+				Color c1, c2, c3, c4;
+				// get colour for 4 corner
+				c1 = image_reader.getColor(x, y);
+				if (x + ratioWidth < width) {
+					c2 = image_reader.getColor(x + ratioWidth, y);
+				} else {
+					// && y+ratioHeight< height
+					c2 = image_reader.getColor(width, y);
+				}
+				if (y + ratioHeight < height) {
+					c3 = image_reader.getColor(x, y + ratioHeight);
+				} else {
+					c3 = image_reader.getColor(x, height);
+				}
+				if (y + ratioHeight < height && x + ratioWidth < width) {
+					c4 = image_reader.getColor(x + ratioWidth, y + ratioHeight);
+				} else {
+					c4 = image_reader.getColor(width, height);
+				}
+				// for each grid calculate
+				for (int y2 = 0; y2 < ratioHeight; y2++) {
+					for (int x2 = 0; x2 < ratioWidth; x2++) {
+						if (y != 0) {
+							// calculate the first line
+							x+x2*(x+x2)/y
+						}
+					}
+				}
+
+				// for each line calculate the whole line.
+				float nowX = ((float) x * ((float) width / (float) nw));
+
+				int nowY = (int) (y * ((float) height / (float) nh));
+
 				// For each pixel, get the colour
-				//Color color = image_reader.getColor(x, y);
+				// Color color = image_reader.getColor(x, y);
+				// Do something (in this case invert) - the getColor function returns colours as
+				// 0..1 doubles (we could multiply by 255 if we want 0-255 colours)
+				Color color = imageA[nowY][nowX];
+				// Note: for gamma correction you may not need the divide by 255 since getColor
+				// already returns 0-1, nor may you need multiply by 255 since the Color.color
+				// function consumes 0-1 doubles.
+
+				// Apply the new colour
+				inverted_image_writer.setColor(x, y, color);
+			}
+		}
+		return inverted_image;
+	}
+
+	private Image nearestNeighbor(Image image, int nh, int nw) {
+		// Find the width and height of the image to be process
+		int width = (int) image.getWidth();
+		int height = (int) image.getHeight();
+		// Create a new image of that width and height
+		WritableImage inverted_image = new WritableImage(nw, nh);
+		// Get an interface to write to that image memory
+		PixelWriter inverted_image_writer = inverted_image.getPixelWriter();
+		// Get an interface to read from the original image passed as the parameter to
+		// the function
+		PixelReader image_reader = image.getPixelReader();
+
+		Color[][] imageA = new Color[height][width];
+
+		// Iterate over all pixels
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				imageA[y][x] = image_reader.getColor(x, y);
+			}
+		}
+
+		// Iterate over all pixels
+		for (int y = 0; y < nh; y++) {
+			for (int x = 0; x < nw; x++) {
+
+				// the coordinate that current pixel take
+				int nowY = (int) (y * ((float) height / (float) nh));
+				int nowX = (int) (x * ((float) width / (float) nw));
+
+				// For each pixel, get the colour
+				// Color color = image_reader.getColor(x, y);
 				// Do something (in this case invert) - the getColor function returns colours as
 				// 0..1 doubles (we could multiply by 255 if we want 0-255 colours)
 				Color color = imageA[nowY][nowX];
@@ -1692,10 +1766,6 @@ public class UIcontroller1 {
 		}
 		return inverted_image;
 	}
-	
-	
-	
-	
 
 	private Image nonLinearFilter(Image image) {
 		// Find the width and height of the image to be process
@@ -1722,12 +1792,12 @@ public class UIcontroller1 {
 							listR.add(image_reader.getColor(x1 + x, y1 + y).getRed());
 							listG.add(image_reader.getColor(x1 + x, y1 + y).getGreen());
 							listB.add(image_reader.getColor(x1 + x, y1 + y).getBlue());
-							
+
 						}
 					}
 				}
-				//System.out.println(listR.size());
-				
+				// System.out.println(listR.size());
+
 				// median
 				Collections.sort(listR);
 				Collections.sort(listG);
@@ -1742,22 +1812,23 @@ public class UIcontroller1 {
 
 							if (Math.abs(y1) == 1 && Math.abs(x1) == 1) {
 								medianR += 0.0113 * (image_reader.getColor(x1 + x, y1 + y).getRed());
-								medianG += 0.0113 *  (image_reader.getColor(x1 + x, y1 + y).getGreen());
-								medianB += 0.0113 *  (image_reader.getColor(x1 + x, y1 + y).getBlue());
+								medianG += 0.0113 * (image_reader.getColor(x1 + x, y1 + y).getGreen());
+								medianB += 0.0113 * (image_reader.getColor(x1 + x, y1 + y).getBlue());
 
 							} else if ((Math.abs(y1) == 0 && Math.abs(x1) == 1)
 									^ (Math.abs(y1) == 1 && Math.abs(x1) == 0)) {
 								medianR += 0.0838 * (image_reader.getColor(x1 + x, y1 + y).getRed());
-								medianG += 0.0838 *  (image_reader.getColor(x1 + x, y1 + y).getGreen());
-								medianB += 0.0838 *  (image_reader.getColor(x1 + x, y1 + y).getBlue());							}
+								medianG += 0.0838 * (image_reader.getColor(x1 + x, y1 + y).getGreen());
+								medianB += 0.0838 * (image_reader.getColor(x1 + x, y1 + y).getBlue());
+							}
 						}
 					}
 				}
-				
+
 				// For each pixel, get the colour
 				// Do something (in this case invert) - the getColor function returns colours as
 				// 0..1 doubles (we could multiply by 255 if we want 0-255 colours)
-				Color color = Color.color(medianR,medianG,medianB);
+				Color color = Color.color(medianR, medianG, medianB);
 				// Note: for gamma correction you may not need the divide by 255 since getColor
 				// already returns 0-1, nor may you need multiply by 255 since the Color.color
 				// function consumes 0-1 doubles.
