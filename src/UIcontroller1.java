@@ -485,19 +485,20 @@ public class UIcontroller1 {
 		int ratioHeight = (int) nh / (int) height;
 
 		// Iterate over all pixels
-		for (int y = 0; y < nh; y += ratioHeight) {
-			for (int x = 0; x < nw; x += ratioWidth) {
+		for (int y = 0; y < height; y ++) {
+			for (int x = 0; x < width; x ++) {
 				Color c1, c2, c3, c4;
 				int c1X, c1Y, c2X, c2Y, c3X, c3Y, c4X, c4Y;
 				// get colour for 4 corner
 				c1 = image_reader.getColor(x, y);
+				c1X=x*ratioWidth;
 				if (x + ratioWidth < width) {
 					c2 = image_reader.getColor(x + ratioWidth, y);
 					c2X = x + ratioWidth;
 					c2Y = y;
 				} else {
 					// && y+ratioHeight< height
-					c2 = image_reader.getColor(width, y);
+					c2 = image_reader.getColor(width-1, y);
 					c2X = width;
 					c2Y = y;
 				}
@@ -506,46 +507,46 @@ public class UIcontroller1 {
 					c3X = x;
 					c3Y = y + ratioHeight;
 				} else {
-					c3 = image_reader.getColor(x, height);
+					c3 = image_reader.getColor(x, height-1);
 					c3X = x;
-					c3Y = height;
+					c3Y = height-1;
 				}
 				if (y + ratioHeight < height && x + ratioWidth < width) {
 					c4 = image_reader.getColor(x + ratioWidth, y + ratioHeight);
 					c4X = x + ratioWidth;
-					c4Y = y + ratioHeight;
+					c4Y = y + ratioHeight-1;
 				} else {
-					c4 = image_reader.getColor(width, height);
-					c4X = width;
-					c4Y = height;
+					c4 = image_reader.getColor(width-1, height-1);
+					c4X = width-1;
+					c4Y = height-1;
 				}
 				for (int x2 = x; x2 < c2X; x2++) {
 					// calculate the head, y2=0
 					// red
-					float red1 = (float) ((c2.getRed() - c1.getRed()) * (((float) x2 - (float) x) / (c2X - x)));
+					float red1 = (float) ((c2.getRed() - c1.getRed()) * (((float) x2 - (float) x) / (c2X - x))+ c1.getRed());
 					// green
-					float green1 = (float) ((c2.getGreen() - c1.getGreen()) * (((float) x2 - (float) x) / (c2X - x)));
+					float green1 = (float) ((c2.getGreen() - c1.getGreen()) * (((float) x2 - (float) x) / (c2X - x))+c1.getGreen());
 					// blue
-					float blue1 = (float) ((c2.getBlue() - c1.getBlue()) * (((float) x2 - (float) x) / (c2X - x)));
+					float blue1 = (float) ((c2.getBlue() - c1.getBlue()) * (((float) x2 - (float) x) / (c2X - x))+c1.getBlue());
 
 					Color top = Color.color(red1, green1, blue1);
 					inverted_image_writer.setColor(x2, y, top);
 
 					// bottom // red
-					float red2 = (float) ((c4.getRed() - c3.getRed()) * (((float) x2 - (float) x) / (c2X - x)));
+					float red2 = (float) ((c4.getRed() - c3.getRed()) * (((float) x2 - (float) x) / (c2X - x))+c3.getRed());
 					// green
-					float green2 = (float) ((c4.getGreen() - c3.getGreen()) * (((float) x2 - (float) x) / (c2X - x)));
+					float green2 = (float) ((c4.getGreen() - c3.getGreen()) * (((float) x2 - (float) x) / (c2X - x))+c3.getGreen());
 					// blue
-					float blue2 = (float) ((c4.getBlue() - c3.getBlue()) * (((float) x2 - (float) x) / (c2X - x)));
+					float blue2 = (float) ((c4.getBlue() - c3.getBlue()) * (((float) x2 - (float) x) / (c2X - x))+c3.getBlue());
 
 					Color bottom = Color.color(red2, green2, blue2);
 					inverted_image_writer.setColor(x2, c3Y, bottom);
 
 					// column 
 					for (int y3 = y; y3 < c3Y; y3++) {
-						float red3 = red2 + (red1 - red2) * (y3 - c3Y / y - c3Y);
-						float green3 = green2 + (green1 - green2) * (y3 - c3Y / y - c3Y);
-						float blue3 = blue2 + (blue1 - blue2) * (y3 - c3Y / y - c3Y);
+						float red3 = red2 + (red1 - red2) * ((y3 - y) / (c3Y-y));
+						float green3 = green2 + (green1 - green2) * ((y3 - y) / (c3Y-y));
+						float blue3 = blue2 + (blue1 - blue2) *((y3 - y) / (c3Y-y));
 						inverted_image_writer.setColor(x2, y + y3, Color.color(red3, green3, blue3));
 					}
 
