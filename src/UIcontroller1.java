@@ -149,6 +149,9 @@ public class UIcontroller1 {
 
 	@FXML
 	private Button lowPassB;
+	
+	@FXML
+	private Button bilinearB;
 
 	@FXML
 	private Button prewittB;
@@ -197,6 +200,14 @@ public class UIcontroller1 {
 	@FXML
 	void nearestNeighbourA(ActionEvent event) {
 		image = nearestNeighbor(imageView.getImage(), Integer.parseInt(nearestNeighbourHeight.getText()),
+				Integer.parseInt(nearestNeighbourWidth.getText()));
+		// Update the GUI so the new image is displayed
+		imageView.setImage(image);
+	}
+	
+	@FXML
+	void bilinearA(ActionEvent event) {
+		image = bilinear(imageView.getImage(), Integer.parseInt(nearestNeighbourHeight.getText()),
 				Integer.parseInt(nearestNeighbourWidth.getText()));
 		// Update the GUI so the new image is displayed
 		imageView.setImage(image);
