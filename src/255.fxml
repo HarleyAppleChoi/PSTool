@@ -76,5 +76,6 @@
       <TextField fx:id="nearestNeighbourHeight" layoutX="444.0" layoutY="14.0" promptText="Height" />
       <TextField fx:id="nearestNeighbourWidth" layoutX="444.0" layoutY="50.0" promptText="Width" />
       <Button fx:id="nearestNeighbourB" layoutX="303.0" layoutY="14.0" mnemonicParsing="false" onAction="#nearestNeighbourA" text="Nearest Neighbor" />
+      <Button fx:id="bilinearB" layoutX="303.0" layoutY="50.0" mnemonicParsing="false" onAction="#bilinearA" text="Bilinear" />
    </children>
 </AnchorPane>
