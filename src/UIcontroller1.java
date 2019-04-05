@@ -474,34 +474,94 @@ public class UIcontroller1 {
 		int ratioHeight = (int) nh / (int) height;
 
 		// Iterate over all pixels
-		for (int y = 0; y < nh; y++) {
-			for (int x = 0; x < nw; x++) {
+		for (int y = 0; y < nh; y+=ratioHeight) {
+			for (int x = 0; x < nw; x+=ratioWidth) {
 				Color c1, c2, c3, c4;
+				int c1X,c1Y,c2X,c2Y,c3X,c3Y,c4X,c4Y;
 				// get colour for 4 corner
 				c1 = image_reader.getColor(x, y);
 				if (x + ratioWidth < width) {
 					c2 = image_reader.getColor(x + ratioWidth, y);
+					c2X=x + ratioWidth;
+					c2Y=y;
 				} else {
 					// && y+ratioHeight< height
 					c2 = image_reader.getColor(width, y);
+					c2X=width;
+					c2Y=y;
 				}
 				if (y + ratioHeight < height) {
 					c3 = image_reader.getColor(x, y + ratioHeight);
+					c3X=x;
+					c3Y=y+ratioHeight;
 				} else {
 					c3 = image_reader.getColor(x, height);
+					c3X=x;
+					c3Y=height;
 				}
 				if (y + ratioHeight < height && x + ratioWidth < width) {
 					c4 = image_reader.getColor(x + ratioWidth, y + ratioHeight);
+					c4X=x + ratioWidth;
+					c4Y=y + ratioHeight;
 				} else {
 					c4 = image_reader.getColor(width, height);
+					c4X=width;
+					c4Y=height;
 				}
+				for (int x2 = 0; x2 < ratioWidth; x2++) {
+					int y2 = 0;
+					// calculate the first line, y2=0
+					// red
+					float red = (float) ((c2.getRed() - c1.getRed()) * ((float) x2 - (float) x));
+					// green
+					float green = (float) ((c2.getGreen() - c1.getGreen()) * ((float) x2 - (float) x));
+					// blue
+					float blue = (float) ((c2.getBlue() - c1.getBlue()) * ((float) x2 - (float) x));
+
+					inverted_image_writer.setColor(x + x2, y + y2, Color.color(red, green, blue));
+
+					y2 = y + ratioHeight - 1;
+					// calculate the first line, y2=0
+					// red
+					 red = (float) ((c4.getRed() - c3.getRed()) * ((float) x2 - (float) x));
+					// green
+					 green = (float) ((c4.getGreen() - c3.getGreen()) * ((float) x2 - (float) x));
+					// blue
+					 blue = (float) ((c4.getBlue() - c3.getBlue()) * ((float) x2 - (float) x));
+
+					inverted_image_writer.setColor(x + x2, y + y2, Color.color(red, green, blue));
+
+				}
+
 				// for each grid calculate
 				for (int y2 = 0; y2 < ratioHeight; y2++) {
 					for (int x2 = 0; x2 < ratioWidth; x2++) {
-						if (y != 0) {
-							// calculate the first line
-							x+x2*(x+x2)/y
+						if (y2 == 0) {
+							// calculate the first line, y2=0
+							// red
+							float red = (float) ((c2.getRed() - c1.getRed()) * ((float) x2 - (float) x));
+							// green
+							float green = (float) ((c2.getGreen() - c1.getGreen()) * ((float) x2 - (float) x));
+							// blue
+							float blue = (float) ((c2.getBlue() - c1.getBlue()) * ((float) x2 - (float) x));
+
+							inverted_image_writer.setColor(x + x2, y + y2, Color.color(red, green, blue));
+
 						}
+
+						if (y2 == ratioHeight - 1) {
+							// calculate the first line, y2=0
+							// red
+							float red = (float) ((c2.getRed() - c1.getRed()) * ((float) x2 - (float) x));
+							// green
+							float green = (float) ((c2.getGreen() - c1.getGreen()) * ((float) x2 - (float) x));
+							// blue
+							float blue = (float) ((c2.getBlue() - c1.getBlue()) * ((float) x2 - (float) x));
+
+							inverted_image_writer.setColor(x + x2, y + y2, Color.color(red, green, blue));
+
+						}
+
 					}
 				}
 
@@ -514,13 +574,13 @@ public class UIcontroller1 {
 				// Color color = image_reader.getColor(x, y);
 				// Do something (in this case invert) - the getColor function returns colours as
 				// 0..1 doubles (we could multiply by 255 if we want 0-255 colours)
-				Color color = imageA[nowY][nowX];
+				// Color color = imageA[nowY][nowX];
 				// Note: for gamma correction you may not need the divide by 255 since getColor
 				// already returns 0-1, nor may you need multiply by 255 since the Color.color
 				// function consumes 0-1 doubles.
 
 				// Apply the new colour
-				inverted_image_writer.setColor(x, y, color);
+				// inverted_image_writer.setColor(x, y, color);
 			}
 		}
 		return inverted_image;
